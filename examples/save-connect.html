@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Connect</title>
+        <link rel="stylesheet" href="./app.css" />
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.bundle.min.js"></script>
+    </head>
+    <body>
+        <div class="main-connect">
+            <div class="navigation-bar">
+                <ul class="items connect-heading">
+                    <li class="wsd-logo">
+                        <img src="https://spanidea.com/in/wp-content/uploads/2022/08/png-white-logo-300x53.png" alt="Spanidea Logo" loading="lazy" />
+                    </li>
+                    <div class="wsd">Detection</div>
+                </ul>
+            </div>
+            <div class="auth-inner">
+                <form id="connectForm" onsubmit="handleConnect(); return false;">
+                    <svg width="102" height="90" viewBox="0 0 102 90" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path
+                            d="M45.3333 0.375C42.199 0.375 39.6667 3.22383 39.6667 6.75V27.0504C39.6667 28.166 38.8698 29.0625 37.8781 29.0625C37.2406 29.0625 36.6385 28.684 36.3198 28.0465L27.8198 11.332C14.6979 18.6035 5.66667 33.8039 5.66667 51.375V64.125H96.3333V50.8969C96.174 33.525 87.1781 18.5438 74.1802 11.332L65.6802 28.0465C65.3615 28.684 64.7594 29.0625 64.1219 29.0625C63.1302 29.0625 62.3333 28.166 62.3333 27.0504V6.75C62.3333 3.22383 59.801 0.375 56.6667 0.375H45.3333ZM2.93958 70.5C1.31042 70.5 0 71.9742 0 73.807C0 74.7434 0.354167 75.6399 1.02708 76.1777C4.86979 79.3453 19.7979 89.625 51 89.625C82.2021 89.625 97.1302 79.3453 100.973 76.1777C101.646 75.6199 102 74.7434 102 73.807C102 71.9742 100.69 70.5 99.0604 70.5H2.93958Z"
+                            fill="#EEC800"
+                        />
+                    </svg>
+                    <h2 class="mt-3">Worker's Safety Detection</h2>
+                    <p class="mt-2">Provide camera details to connect</p>
+                    <div>
+                        <input type="text" class="form-control" placeholder="Camera Name" required />
+                    </div>
+                    <div class="mb-3">
+                        <input type="text" class="form-control" placeholder="UUID" required value="3C62F019B206-2305DMM000059" />
+                    </div>
+                    <div class="">
+                        <input type="submit" class="btns" value="Connect" />
+                    </div>
+                </form>
+            </div>
+            <div class="rectangle6"></div>
+            <!-- <div class="connect-history-cards">
+                <div class="connect-history-card">
+                    <div class="history-detail">
+                        <b>Camera Name 1</b>
+                        <div class="mt-2">UUID 1</div>
+                        <div>12345678-1234-5678-1234-567812345678</div>
+                    </div>
+                    <button class="btns mt-3 btn-outlined" onclick="handlePreviousConnect('Camera Name 1', '12345678-1234-5678-1234-567812345678')">
+                        Connect
+                    </button>
+                </div>
+                <div class="connect-history-card">
+                    <div class="history-detail">
+                        <b>Camera Name 2</b>
+                        <div class="mt-2">UUID 2</div>
+                        <div>87654321-4321-8765-4321-876543218765</div>
+                    </div>
+                    <button class="btns mt-3 btn-outlined" onclick="handlePreviousConnect('Camera Name 2', '87654321-4321-8765-4321-876543218765')">
+                        Connect
+                    </button>
+                </div>
+            </div> -->
+            <div class="spanidea-footer">
+                Developed by Spanidea Systems Pvt Ltd.
+            </div>
+        </div>
+        <script>
+            function handleConnect() {
+                var cameraName = document.querySelector('#connectForm input[type="text"][placeholder="Camera Name"]').value;
+                var uuid = document.querySelector('#connectForm input[type="text"][placeholder="UUID"]').value;
+
+                var formData = {
+                    cameraName: cameraName,
+                    uuid: uuid,
+                };
+
+                var storedDevices = JSON.parse(localStorage.getItem('connectedDevices')) || [];
+                storedDevices.push(formData);
+                localStorage.setItem('connectedDevices', JSON.stringify(storedDevices));
+
+                var queryParams = new URLSearchParams();
+                queryParams.append('uuid', uuid);
+
+                window.location.href = 'detection.html?' + queryParams.toString();
+            }
+        </script>
+    </body>
+</html>
