@@ -1,37 +1,43 @@
 const path = require('path');
+const { merge } = require('webpack-merge');
 const TerserPlugin = require('terser-webpack-plugin');
-const merge = require('webpack-merge');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
+const HtmlWebpackPlugin = require('html-webpack-plugin');  // Import HtmlWebpackPlugin
 
-// Define maximum asset size before gzipping
-const MAX_ASSET_SIZE_KB = 23.6;
-const MAX_ASSET_SIZE_BYTES = MAX_ASSET_SIZE_KB * 1024;
-
-module.exports = merge.smart(require('./webpack.config'), {
+module.exports = merge(require('./webpack.config'), {
     mode: 'production',
-
     output: {
         path: path.resolve(__dirname, 'dist'),
-        filename: 'kvs-webrtc.min.js',
+        filename: 'bundle.[contenthash].js',
+        clean: true,
     },
-
-    // Make sure the asset is not accidentally growing in size
-    // Make sure that size impact of adding new code is known
     performance: {
         hints: 'error',
-        maxAssetSize: MAX_ASSET_SIZE_BYTES,
-        maxEntrypointSize: MAX_ASSET_SIZE_BYTES,
+        maxAssetSize: 24000,  // Max asset size in bytes
+        maxEntrypointSize: 24000,  // Max entry point size in bytes
     },
-
     optimization: {
+        minimize: true,
         minimizer: [
             new TerserPlugin({
                 terserOptions: {
-                    output: {
-                        comments: /kvs-webrtc\.LICENSE/i,
+                    format: {
+                        comments: false,
                     },
                 },
                 extractComments: false,
             }),
+            new CssMinimizerPlugin(),
         ],
     },
+    plugins: [
+        new MiniCssExtractPlugin({
+            filename: '[name].[contenthash].css',
+        }),
+        new HtmlWebpackPlugin({
+            template: './src/index.html',  // Path to your template
+            filename: 'index.html',
+        }),
+    ],
 });
